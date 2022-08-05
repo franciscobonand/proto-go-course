@@ -304,3 +304,10 @@ message Message {
   - Remove all leading 0's
   - Left with a binary that can be interpreted into a number
 - 256 + 32 + 8 + 4 = 300
+
+## References
+
+- [Documentation](https://developers.google.com/protocol-buffers/docs/overview)
+- [Main repository examples](https://github.com/protocolbuffers/protobuf/tree/main/examples)
+- [Some Google APIs types](https://github.com/googleapis/googleapis/tree/master/google/type)
+- [Protocol Buffer itself](https://github.com/protocolbuffers/protobuf/tree/main/src/google/protobuf)
