@@ -1,4 +1,5 @@
 # proto-go-course
+
 Protobuf w/ Golang - course from Udemy
 
 ## Advantages
@@ -164,7 +165,7 @@ message Account {
   - Not give meaning for default values
   - `if` or `switch` to reject default values
 
-## Advanced
+## Advanced `protoc` commands
 
 ### Decode Raw
 
@@ -194,3 +195,112 @@ Running example:
 
 Just like Decode, if there's a package defined it should be added in the command: `... --encode=<pkg_name>.Simple ...`
 
+## Integers
+
+Evaluate the type needed for each field:
+
+- Range (32bit or 64bit)
+- Signed or Unsigned
+  - int32 and int64 are not efficient at serializing **negative** values
+  - sint32 and sint64 are not efficient at serializing **positive** values
+- Varint or not (fixed size number or not) - 4 bytes or 8 bytes
+
+## Advanced Data Types
+
+**oneof**:
+
+- Can't be `repeated`
+- Evolving the schema can be tricky
+
+**map**:
+
+- Can't be `repeated`
+- Can't use float, double and enums as keys
+- There is no ordering
+
+**Well-known types (defined by google)**:
+
+- `google.protobuf.Timestamp`
+- `google.protobuf.Duration`
+- etc.
+
+## Options
+
+File options are many and can be found in Protocol Buffers repository. Beware of deprecated ones.  
+Message and field options can be found in the same repository as file options.  
+[Doc reference](https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/descriptor.proto)
+
+## Naming conventions
+
+Google styleguide:
+
+- File name: lower snake_case
+- Content order inside a file:
+  - License
+  - Syntax
+  - Package
+  - Imports ordered alphabetically
+  - Options
+- Messages, Enums and Services should be in CamelCase
+  - Enum fields in all caps and snake_case
+  - Message fields in lower snake_case
+    - Use plural for `repeated` fields
+
+[Uber styleguide](https://github.com/uber/prototool/blob/dev/etc/style/uber1/uber1.proto)
+
+## Services
+
+Designed for communication, not serialization/deserialization. Generally used with gRPC.  
+Basically a set of endpoints that define an API.
+
+## Internals
+
+|Type|Meaning|Used For|
+|----|-------|--------|
+|0|Varint|int32, int64, uint32, uint64, sint32, sint64, bool, enum|
+|1|64-bit|fixed64, sfixed64, double|
+|2|Length-delimited|string, bytes, embedded messages, packed repeated fields|
+|5|32-bit|fixed32, sfixed32, float|
+
+*Types 3 and 4 are deprecated
+
+**Message example**:
+
+```go
+syntax = "proto3";
+
+message Message {
+    uint32 id = 1;
+    /*
+        Key: 08
+        Value: AC 02
+    */
+}
+```
+
+**Key decoding steps**:
+
+- 08
+  - Convert hexadecimal to binary
+- 0000 1000
+  - Drop most significant bit
+- 000 1000
+  - Tag is represeted by the first four bits (0001)
+  - Type is represented by the last three bits (000)
+- Tag: 1
+- Type: Varint
+
+**Value decoding steps**:
+
+- AC 02
+  - Convert hexadecimal to binary
+- 1010 1100    0000 0010
+  - Checks for most significant bit. 1 means the current byte is not the last one.
+- 010 1100    000 0010
+  - Drop most significant bit
+- 000 0010    010 1100
+  - Reverse the bit
+- 10    010 1100
+  - Remove all leading 0's
+  - Left with a binary that can be interpreted into a number
+- 256 + 32 + 8 + 4 = 300
