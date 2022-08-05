@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+/* Currency
+    Defines an amount of some currency
+    Example: USD 35.42
+*/
+message Currency {
+    string code = 1;
+    int32 integral = 2;
+    int32 decimal = 3;
+}

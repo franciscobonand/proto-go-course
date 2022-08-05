@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+/* Date
+    Defines a date in format year/month/day
+    Example: 2018/03/15
+*/
+message Date {
+    int32 year = 1;
+    int32 month = 2;
+    int32 day = 3;
+}

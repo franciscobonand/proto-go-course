@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package simple;
+
+/* For Golang 
+
+First define an option like the following:
+    option go_package = "github.com/rand/golang";
+then run the command:
+    protoc --proto_path=proto --go_out=golang --go_opt=paths=source_relative \
+    --go-grpc_out=golang --go-grpc_opt=paths=source_relative proto/simple.proto
+*/
+message Simple {
+    uint32 id = 1;
+}

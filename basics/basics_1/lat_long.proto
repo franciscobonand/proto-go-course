@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+/* Coordinates
+    Defines a set of longitude/latitude coordinates
+    Example: -33.865382, 151.192861
+*/
+message Coordinates {
+    double latitude = 1;
+    double longitude = 2;
+}

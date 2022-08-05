@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "prac2_buildingpkg.proto";
+import "prac2_streetpkg.proto";
+import "prac2_citypkg.proto";
+
+message Adress {
+    city.City city = 1;
+    street.Street street = 2;
+    building.Building building = 3;
+}
