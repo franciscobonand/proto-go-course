@@ -164,3 +164,33 @@ message Account {
   - Not give meaning for default values
   - `if` or `switch` to reject default values
 
+## Advanced
+
+### Decode Raw
+
+Used for decoding binaries into tag-value text. Reads from standard input and writes on standart output.
+Running example:
+
+`cat advanced/protoc/simple.bin | protoc --decode_raw`
+
+### Decode
+
+Used for decoding binaries into keyword-value text. Reads from standard input and writes on standart output.
+Running example:
+
+`cat advanced/protoc/simple.bin | protoc --decode=Simple advanced/protoc/simple.proto`
+
+When there is a package defined in the `.proto` file add the package name: `... --decode=<pkg_name>.Simple ...`
+Example:
+
+`cat advanced/protoc/simple.bin | protoc --decode=simple.Simple advanced/protoc/simple.proto`
+
+### Encode
+
+It's the opposite of Decode: receives a keyword-value text input and translates it into binary.
+Running example:
+
+`cat advanced/protoc/simple.txt | protoc --encode=Simple advanced/protoc/simple.proto > advanced/protoc/simple.pb`
+
+Just like Decode, if there's a package defined it should be added in the command: `... --encode=<pkg_name>.Simple ...`
+
